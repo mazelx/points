@@ -1,0 +1,716 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Points Récompenses</title>
+<meta name="theme-color" content="#6c4bd8">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f1f3fa; --surface:#ffffff; --surface-2:#e9e6f8; --text:#23203a; --muted:#6a6787;
+  --accent:#6c4bd8; --accent-text:#ffffff; --pos:#1f9a5a; --danger:#d93d45; --border:#dcd8ee;
+  --shadow:0 10px 24px -12px rgba(50,30,120,.35);
+  color-scheme:light;
+  box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#15131f; --surface:#211e30; --surface-2:#2d2943; --text:#f2f0fb; --muted:#a7a3c4;
+    --accent:#9a84ff; --accent-text:#15131f; --pos:#4fd18b; --danger:#ff6b72; --border:#383250;
+    --shadow:0 10px 24px -12px rgba(0,0,0,.7); color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#15131f; --surface:#211e30; --surface-2:#2d2943; --text:#f2f0fb; --muted:#a7a3c4;
+  --accent:#9a84ff; --accent-text:#15131f; --pos:#4fd18b; --danger:#ff6b72; --border:#383250;
+  --shadow:0 10px 24px -12px rgba(0,0,0,.7); color-scheme:dark;
+}
+*{box-sizing:border-box;margin:0}
+html{height:100%;-webkit-text-size-adjust:100%;scroll-padding-top:env(safe-area-inset-top,0px)}
+body{min-height:100%;background:var(--bg);color:var(--text);font-family:'Baloo 2',ui-rounded,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;font-weight:500;line-height:1.35;-webkit-tap-highlight-color:transparent}
+button,input{font:inherit;color:inherit}
+button{touch-action:manipulation;cursor:pointer;border:0;background:none;-webkit-user-select:none;user-select:none}
+button:focus-visible,input:focus-visible,label:focus-within{outline:3px solid var(--accent);outline-offset:2px}
+main{max-width:760px;margin:0 auto;padding:18px 16px calc(100px + env(safe-area-inset-bottom,0px))}
+.view-title{font-size:30px;font-weight:800;letter-spacing:-.01em;margin:2px 4px 14px}
+
+/* Compteurs */
+.kids{display:grid;gap:16px}
+@media (min-width:700px){.kids{grid-template-columns:1fr 1fr}}
+.kid{background:var(--kid-bg);color:var(--kid-fg);border-radius:32px;padding:20px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:16px}
+.kid-top{display:flex;align-items:center;gap:16px}
+.avatar{flex:none;width:88px;height:88px;border-radius:50%;background:var(--kid-soft);display:grid;place-items:center;font-size:50px;line-height:1;overflow:hidden}
+.avatar img{width:100%;height:100%;object-fit:contain}
+.kid-info{min-width:0}
+.kid-name{font-size:24px;font-weight:700;line-height:1.1;overflow-wrap:anywhere}
+.kid-points{display:flex;align-items:baseline;gap:8px}
+.num{font-size:76px;font-weight:800;line-height:.95;font-variant-numeric:tabular-nums;display:inline-block;letter-spacing:-.02em}
+.num.bump{animation:bump .32s ease}
+@keyframes bump{40%{transform:scale(1.22)}}
+.unit{font-size:20px;font-weight:700;opacity:.8}
+.next{display:grid;gap:6px;font-size:15px;font-weight:600}
+.bar{height:10px;border-radius:99px;background:var(--kid-soft);overflow:hidden}
+.bar i{display:block;height:100%;background:var(--kid-fg);border-radius:inherit;opacity:.85;transition:width .3s}
+.kid-actions{display:grid;grid-template-columns:64px 1fr 1.4fr;gap:10px}
+.btn-soft,.btn-plus{height:68px;border-radius:22px;font-weight:700}
+.btn-soft{background:var(--kid-soft);color:var(--kid-fg);font-size:19px}
+.btn-minus{font-size:34px}
+.btn-plus{background:var(--kid-fg);color:var(--kid-bg);font-size:34px;font-weight:800}
+.btn-soft:active,.btn-plus:active{transform:scale(.95)}
+
+/* Navigation */
+.tabs{position:fixed;left:0;right:0;bottom:0;z-index:5;background:var(--surface);border-top:1px solid var(--border);display:grid;grid-template-columns:repeat(4,1fr);gap:4px;padding:6px 8px calc(6px + env(safe-area-inset-bottom,0px))}
+.tab{display:grid;justify-items:center;gap:0;padding:6px 0 4px;border-radius:16px;font-size:13px;font-weight:700;color:var(--muted)}
+.tab b{font-size:22px;font-weight:400;line-height:1.2;filter:grayscale(1);opacity:.6}
+.tab.active{color:var(--accent);background:var(--surface-2)}
+.tab.active b{filter:none;opacity:1}
+
+/* Listes, cartes, champs */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:24px;padding:16px;margin-bottom:14px;display:grid;gap:14px}
+.card h2{font-size:20px;font-weight:700}
+.muted{color:var(--muted);font-size:15px}
+.small{font-size:14px}
+.list{list-style:none;padding:0;display:grid;gap:8px;margin-bottom:16px}
+.row{display:flex;align-items:center;gap:12px;background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:10px 10px 10px 12px}
+.row-main{flex:1;min-width:0;display:grid}
+.row-title{font-weight:700;font-size:17px;overflow-wrap:anywhere}
+.row-sub{color:var(--muted);font-size:14px}
+.r-emoji{font-size:30px;width:40px;text-align:center;flex:none;line-height:1}
+.icon-btn{width:44px;height:44px;border-radius:14px;font-size:18px;flex:none}
+.icon-btn:active{background:var(--surface-2)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:50px;padding:0 18px;border-radius:16px;background:var(--surface-2);font-weight:700;font-size:17px;cursor:pointer}
+.btn-primary{background:var(--accent);color:var(--accent-text)}
+.btn-danger{background:var(--danger);color:#fff}
+.btn-block{width:100%}
+.empty{color:var(--muted);text-align:center;padding:28px 12px;font-size:17px}
+.delta{font-weight:800;font-size:18px;font-variant-numeric:tabular-nums;min-width:44px;text-align:right}
+.delta.pos{color:var(--pos)} .delta.neg{color:var(--danger)}
+.h-dot{width:14px;height:14px;border-radius:50%;flex:none;box-shadow:0 0 0 1px var(--border)}
+.field{display:grid;gap:6px}
+.field>span{font-size:15px;color:var(--muted);font-weight:700}
+.field input{min-height:50px;border-radius:14px;border:1px solid var(--border);background:var(--bg);padding:0 14px;font-size:18px;width:100%}
+.set-head{display:flex;gap:14px;align-items:flex-end}
+.grow{flex:1;min-width:0}
+.avatar-btn{position:relative;flex:none;border-radius:50%}
+.avatar-btn .avatar{width:68px;height:68px;font-size:38px;background:var(--kid-bg)}
+.avatar-edit{position:absolute;right:-4px;bottom:-4px;width:28px;height:28px;border-radius:50%;background:var(--surface);box-shadow:0 0 0 1px var(--border);display:grid;place-items:center;font-size:14px}
+.swatches{display:grid;grid-template-columns:repeat(auto-fill,minmax(40px,1fr));gap:8px}
+.swatch{aspect-ratio:1;border-radius:50%;box-shadow:inset 0 0 0 1px rgba(0,0,0,.12);position:relative}
+.swatch.sel{outline:3px solid var(--text);outline-offset:2px}
+.swatch-custom{background:conic-gradient(#f44,#fd3,#4e6,#3df,#46f,#d4f,#f44);overflow:hidden;cursor:pointer}
+.swatch-custom input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;border:0;padding:0}
+.emoji-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(50px,1fr));gap:6px}
+.emoji-opt{aspect-ratio:1;font-size:28px;border-radius:14px;background:var(--surface-2);line-height:1}
+.emoji-opt.sel{outline:3px solid var(--accent);outline-offset:1px}
+.link-danger{color:var(--danger);font-weight:700;justify-self:start;padding:4px 0;font-size:15px}
+.row-btns{display:flex;gap:10px;flex-wrap:wrap}
+.version{text-align:center;color:var(--muted);font-size:13px;margin-top:8px}
+
+/* Synchro */
+.title-row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin:2px 4px 14px}
+.title-row .view-title{margin:0}
+.pill{font-size:14px;font-weight:700;color:var(--muted);background:var(--surface);border:1px solid var(--border);border-radius:99px;padding:3px 12px}
+.pill.warn{color:var(--danger)}
+.code{font-size:30px;font-weight:800;letter-spacing:.08em;text-align:center;background:var(--surface-2);border-radius:16px;padding:10px;font-variant-numeric:tabular-nums}
+
+/* Fenêtres */
+dialog{border:0;padding:0;background:var(--surface);color:var(--text);border-radius:28px;width:min(560px,calc(100vw - 24px));max-height:calc(100dvh - 40px);box-shadow:0 24px 60px rgba(0,0,0,.35)}
+dialog::backdrop{background:rgba(20,12,50,.5)}
+.dlg-body{padding:20px;display:grid;gap:16px;overflow:auto;max-height:calc(100dvh - 40px)}
+.dlg-body h2{font-size:24px;font-weight:800;line-height:1.15}
+.dlg-body p{font-size:17px}
+.dlg-actions{display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap}
+.shop-list{display:grid;gap:8px}
+.shop-item{display:flex;align-items:center;gap:12px;padding:12px;border-radius:18px;background:var(--surface-2);text-align:left;width:100%}
+.shop-item .r-name{flex:1;font-weight:700;font-size:17px}
+.r-price{font-weight:800;background:var(--accent);color:var(--accent-text);border-radius:99px;padding:3px 12px;font-size:15px;white-space:nowrap}
+.shop-item:disabled{opacity:.6;cursor:default}
+.shop-item:disabled .r-price{background:transparent;color:var(--muted);box-shadow:inset 0 0 0 1px var(--border)}
+
+.toast{position:fixed;left:50%;bottom:calc(96px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--text);color:var(--bg);padding:12px 18px;border-radius:16px;font-weight:700;z-index:20;max-width:calc(100vw - 32px);text-align:center}
+.celebrate{position:fixed;inset:0;display:grid;place-items:center;font-size:150px;pointer-events:none;z-index:30;animation:pop 1.2s ease forwards}
+@keyframes pop{0%{transform:scale(.2);opacity:0}25%{transform:scale(1.15);opacity:1}60%{transform:scale(1)}100%{transform:scale(1.4);opacity:0}}
+@media (prefers-reduced-motion: reduce){.num.bump,.celebrate{animation:none}.celebrate{display:none}}
+</style>
+</head>
+<body>
+<main id="main"></main>
+
+<nav class="tabs" aria-label="Navigation">
+  <button class="tab" data-action="tab" data-tab="points"><b>⭐</b>Points</button>
+  <button class="tab" data-action="tab" data-tab="rewards"><b>🎁</b>Récompenses</button>
+  <button class="tab" data-action="tab" data-tab="history"><b>📜</b>Historique</button>
+  <button class="tab" data-action="tab" data-tab="settings"><b>⚙️</b>Réglages</button>
+</nav>
+
+<dialog id="dlg"><div class="dlg-body" id="dlg-body"></div></dialog>
+
+<script src="firebase-config.js"></script>
+<script>
+const APP_VERSION = '1.1.0';
+const STORE_KEY = 'points-recompenses:v1';
+const SYNC_KEY = 'points-recompenses:famille';
+const FB_URL = 'https://www.gstatic.com/firebasejs/10.12.2';
+
+const KID_ICONS = ['⭐','🦄','🐉','🦖','🐱','🐶','🐻','🐷','🐹','🐭','🐰','🦊','🐼','🐨','🦁','🐯','🐸','🐵','🦉','🐧','🐢','🐙','🦋','🐞','🐬','🦈','🚀','🚗','🚒','🚜','⚽','🏀','🎨','🎸','🌈','⚡','🔥','👑','💎','🏰','🧸','🤖'];
+const REWARD_ICONS = ['🎁','🍦','🍫','🍬','🍭','🍩','🍕','🍔','🍟','🍿','📺','🎮','🎬','📱','🧸','🚲','🏊','🎡','🌳','📚','🎨','⚽','🛁','🌙','⏰','🎟️','🛍️','🎉'];
+const PALETTE = ['#ef476f','#ff6b6b','#e63946','#f3722c','#f8961e','#ffb703','#ffd166','#f9e076','#90be6d','#43aa8b','#06d6a0','#2a9d8f','#4cc9f0','#4895ef','#4361ee','#3a0ca3','#7209b7','#b5179e','#f72585','#ff8fab','#cdb4db','#a2d2ff','#8d99ae','#2b2d42','#6d4c41','#ffffff'];
+
+const uid = () => Math.random().toString(36).slice(2, 9) + Date.now().toString(36);
+const $ = s => document.querySelector(s);
+const main = $('#main'), dlg = $('#dlg'), dlgBody = $('#dlg-body');
+
+function defaults() {
+  return {
+    version: 1,
+    kids: [
+      { id: uid(), name: 'Enfant 1', points: 0, color: '#ffb703', icon: { type: 'emoji', value: '⭐' } },
+      { id: uid(), name: 'Enfant 2', points: 0, color: '#4cc9f0', icon: { type: 'emoji', value: '🦄' } }
+    ],
+    rewards: [
+      { id: uid(), name: 'Une glace', price: 10, emoji: '🍦' },
+      { id: uid(), name: '30 min de dessin animé', price: 15, emoji: '📺' },
+      { id: uid(), name: 'Choisir le dîner', price: 20, emoji: '🍕' },
+      { id: uid(), name: 'Sortie au parc', price: 30, emoji: '🌳' }
+    ],
+    history: []
+  };
+}
+
+function migrate(s) {
+  const d = defaults();
+  const kids = (Array.isArray(s && s.kids) ? s.kids : []).filter(k => k && k.id).map(k => ({
+    id: String(k.id),
+    name: String(k.name ?? 'Enfant').slice(0, 30),
+    points: parseInt(k.points, 10) || 0,
+    color: /^#[0-9a-f]{6}$/i.test(k.color) ? k.color.toLowerCase() : '#ffb703',
+    icon: k.icon && k.icon.type === 'image' && String(k.icon.value).startsWith('data:image/')
+      ? { type: 'image', value: String(k.icon.value) }
+      : { type: 'emoji', value: String((k.icon && k.icon.value) || '⭐') }
+  }));
+  const rewards = (Array.isArray(s && s.rewards) ? s.rewards : d.rewards).filter(r => r && r.id).map(r => ({
+    id: String(r.id), name: String(r.name ?? '').slice(0, 60), price: Math.max(1, parseInt(r.price, 10) || 1), emoji: String(r.emoji || '🎁')
+  }));
+  const history = (Array.isArray(s && s.history) ? s.history : []).filter(h => h && h.id).slice(0, 1000);
+  return { version: 1, kids: kids.length ? kids : d.kids, rewards, history };
+}
+
+function load() {
+  try { const raw = localStorage.getItem(STORE_KEY); if (raw) return migrate(JSON.parse(raw)); } catch (e) {}
+  return defaults();
+}
+function save() {
+  try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); }
+  catch (e) { toast('Enregistrement impossible : mémoire du téléphone pleine.'); }
+}
+
+let state = load();
+let tab = 'points';
+let editingEmoji = '🎁';
+let pendingConfirm = null;
+let pendingBump = null;
+let needsRender = false;
+
+/* ---------- Utilitaires ---------- */
+function esc(s) { return String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); }
+const kid = id => state.kids.find(k => k.id === id);
+const pts = n => Math.abs(n) > 1 ? 'points' : 'point';
+function textOn(hex) {
+  const n = parseInt(hex.slice(1), 16);
+  const lin = v => { v /= 255; return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); };
+  const L = 0.2126 * lin((n >> 16) & 255) + 0.7152 * lin((n >> 8) & 255) + 0.0722 * lin(n & 255);
+  return L > 0.3 ? '#23203a' : '#ffffff';
+}
+function kidStyle(k) {
+  const fg = textOn(k.color);
+  return `--kid-bg:${k.color};--kid-fg:${fg};--kid-soft:${fg === '#ffffff' ? 'rgba(255,255,255,.24)' : 'rgba(35,32,58,.11)'}`;
+}
+function iconHTML(icon) {
+  return icon.type === 'image' ? `<img src="${esc(icon.value)}" alt="">` : `<span aria-hidden="true">${esc(icon.value)}</span>`;
+}
+const fmt = new Intl.DateTimeFormat('fr-FR', { weekday: 'short', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
+function vibrate(p) { try { navigator.vibrate && navigator.vibrate(p); } catch (e) {} }
+function toast(msg) {
+  document.querySelectorAll('.toast').forEach(t => t.remove());
+  const t = document.createElement('div'); t.className = 'toast'; t.textContent = msg;
+  document.body.appendChild(t); setTimeout(() => t.remove(), 2600);
+}
+function celebrate(emoji) {
+  const el = document.createElement('div'); el.className = 'celebrate'; el.textContent = emoji;
+  document.body.appendChild(el); setTimeout(() => el.remove(), 1300);
+}
+function histLabel(e) {
+  const n = Math.abs(e.delta);
+  if (e.type === 'add') return `${n} ${pts(n)} gagné${n > 1 ? 's' : ''}`;
+  if (e.type === 'sub') return `${n} ${pts(n)} retiré${n > 1 ? 's' : ''}`;
+  return e.label;
+}
+
+/* ---------- Synchro Firebase ---------- */
+const hasConfig = !!(window.FIREBASE_CONFIG && window.FIREBASE_CONFIG.projectId);
+let familyCode = null; try { familyCode = localStorage.getItem(SYNC_KEY); } catch (e) {}
+let fb = null, db = null, famRef = null, unsubs = [], syncStatus = 'off', lastLog = null;
+
+const genCode = () => { const A = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789'; return Array.from(crypto.getRandomValues(new Uint32Array(12)), x => A[x % A.length]).join(''); };
+const fmtCode = c => c.replace(/(.{4})(?=.)/g, '$1-');
+const normCode = s => String(s).toUpperCase().replace(/[^A-Z0-9]/g, '');
+const isRemote = () => !!(familyCode && famRef && fb);
+const timeout = (p, ms) => Promise.race([p, new Promise((_, rej) => setTimeout(() => rej(new Error('timeout')), ms))]);
+
+async function loadFirebase() {
+  if (fb) return;
+  const [app, fs] = await Promise.all([import(`${FB_URL}/firebase-app.js`), import(`${FB_URL}/firebase-firestore.js`)]);
+  const a = app.initializeApp(window.FIREBASE_CONFIG);
+  try { db = fs.initializeFirestore(a, { localCache: fs.persistentLocalCache({ tabManager: fs.persistentMultipleTabManager() }) }); }
+  catch (e) { db = fs.getFirestore(a); }
+  fb = fs;
+}
+const kidPath = (id, f) => f ? new fb.FieldPath('kids', id, f) : new fb.FieldPath('kids', id);
+const rewPath = id => new fb.FieldPath('rewards', id);
+function toRemote(s) {
+  return {
+    kids: Object.fromEntries(s.kids.map((k, i) => [k.id, { name: k.name, points: k.points, color: k.color, icon: k.icon, order: i }])),
+    rewards: Object.fromEntries(s.rewards.map(r => [r.id, { name: r.name, price: r.price, emoji: r.emoji }])),
+    updatedAt: Date.now()
+  };
+}
+async function uploadHistory(ref, list) {
+  for (let i = 0; i < list.length; i += 400) {
+    const b = fb.writeBatch(db);
+    list.slice(i, i + 400).forEach(h => b.set(fb.doc(ref, 'history', h.id), { ts: h.ts, kidId: h.kidId, type: h.type, delta: h.delta, label: h.label || '' }));
+    await b.commit();
+  }
+}
+function syncError(e) {
+  console.warn(e); syncStatus = 'error'; render();
+  toast('La synchro a refusé la modification. Vérifie les règles Firestore (voir le guide).');
+}
+function stopSync() { unsubs.forEach(u => u()); unsubs = []; famRef = null; }
+
+async function startSync(code) {
+  syncStatus = 'connecting'; render();
+  try { await loadFirebase(); } catch (e) { syncStatus = 'error'; render(); return; }
+  stopSync();
+  famRef = fb.doc(db, 'families', code);
+  unsubs.push(fb.onSnapshot(famRef, { includeMetadataChanges: true }, snap => {
+    if (!snap.exists()) { if (!snap.metadata.fromCache) { syncStatus = 'error'; render(); toast('Cet espace famille n’existe plus.'); } return; }
+    const d = snap.data();
+    const kids = Object.entries(d.kids || {}).map(([id, k]) => ({ id, ...k })).sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+    const rewards = Object.entries(d.rewards || {}).map(([id, r]) => ({ id, ...r }));
+    const m = migrate({ kids, rewards });
+    state.kids = m.kids; state.rewards = m.rewards;
+    syncStatus = snap.metadata.hasPendingWrites || snap.metadata.fromCache ? 'pending' : 'ok';
+    save(); render();
+  }, err => { console.warn(err); syncStatus = 'error'; render(); }));
+  unsubs.push(fb.onSnapshot(fb.query(fb.collection(famRef, 'history'), fb.orderBy('ts', 'desc'), fb.limit(300)), snap => {
+    state.history = snap.docs.map(x => ({ id: x.id, ...x.data() }));
+    save(); if (tab === 'history') render();
+  }, err => console.warn(err)));
+}
+
+async function createFamily() {
+  try { await timeout(loadFirebase(), 15000); } catch (e) { toast('Firebase ne répond pas. Vérifie la connexion internet.'); return; }
+  const code = genCode(), ref = fb.doc(db, 'families', code);
+  toast('Création de l’espace famille…');
+  try { await timeout(fb.setDoc(ref, toRemote(state)), 15000); await timeout(uploadHistory(ref, state.history.slice(0, 300)), 20000); }
+  catch (e) { console.warn(e); toast('Création impossible. Vérifie internet et les règles Firestore (voir le guide).'); return; }
+  familyCode = code; localStorage.setItem(SYNC_KEY, code);
+  await startSync(code);
+  tab = 'settings'; render(); toast('Espace famille créé');
+}
+
+async function joinFamily(code) {
+  try { await timeout(loadFirebase(), 15000); } catch (e) { toast('Firebase ne répond pas. Vérifie la connexion internet.'); return; }
+  let snap;
+  try { snap = await timeout(fb.getDoc(fb.doc(db, 'families', code)), 15000); }
+  catch (e) { toast('Connexion impossible. Vérifie internet et réessaie.'); return; }
+  if (!snap.exists()) { toast('Aucun espace famille avec ce code. Vérifie les lettres.'); return; }
+  familyCode = code; localStorage.setItem(SYNC_KEY, code);
+  await startSync(code); toast('Téléphone relié à l’espace famille');
+}
+
+async function leaveFamily() {
+  if (!(await confirmBox('Arrêter la synchro ?', 'Ce téléphone garde une copie des points, mais ne recevra plus les changements de l’autre téléphone. Tu pourras le relier à nouveau avec le code.', 'Arrêter', true))) return;
+  stopSync(); familyCode = null; syncStatus = 'off'; lastLog = null;
+  try { localStorage.removeItem(SYNC_KEY); } catch (e) {}
+  save(); render();
+}
+
+async function shareCode() {
+  const text = `Code famille pour l’appli Points : ${fmtCode(familyCode)}\n${location.href.split('#')[0]}`;
+  try { if (navigator.share) { await navigator.share({ title: 'Points Récompenses', text }); return; } } catch (e) { return; }
+  try { await navigator.clipboard.writeText(text); toast('Code copié'); } catch (e) { toast(fmtCode(familyCode)); }
+}
+
+/* ---------- Opérations (locales ou synchronisées) ---------- */
+function ready() {
+  if (familyCode && !isRemote()) { toast('Connexion à la synchro en cours, réessaie dans un instant.'); return false; }
+  return true;
+}
+
+function opPoints(k, delta, type, label) {
+  if (!ready()) return;
+  pendingBump = k.id;
+  const now = Date.now();
+  const merge = (type === 'add' || type === 'sub');
+  if (!isRemote()) {
+    const last = state.history[0];
+    k.points += delta;
+    if (merge && last && last.kidId === k.id && last.type === type && now - last.ts < 120000) { last.delta += delta; last.ts = now; }
+    else { state.history.unshift({ id: uid(), ts: now, kidId: k.id, type, delta, label: label || '' }); if (state.history.length > 1000) state.history.length = 1000; }
+    save(); render(); return;
+  }
+  const b = fb.writeBatch(db);
+  b.update(famRef, kidPath(k.id, 'points'), fb.increment(delta));
+  if (merge && lastLog && lastLog.kidId === k.id && lastLog.type === type && now - lastLog.ts < 120000 && state.history.some(h => h.id === lastLog.id)) {
+    b.update(fb.doc(famRef, 'history', lastLog.id), { delta: fb.increment(delta), ts: now }); lastLog.ts = now;
+  } else {
+    const id = uid();
+    b.set(fb.doc(famRef, 'history', id), { ts: now, kidId: k.id, type, delta, label: label || '' });
+    lastLog = merge ? { id, kidId: k.id, type, ts: now } : null;
+  }
+  b.commit().catch(syncError);
+}
+
+function opUndo(h) {
+  if (!ready()) return;
+  const k = kid(h.kidId);
+  const change = k ? Math.max(0, k.points - h.delta) - k.points : 0;
+  if (!isRemote()) { if (k) k.points += change; state.history = state.history.filter(x => x !== h); save(); render(); return; }
+  const b = fb.writeBatch(db);
+  if (k && change) b.update(famRef, kidPath(k.id, 'points'), fb.increment(change));
+  b.delete(fb.doc(famRef, 'history', h.id));
+  b.commit().catch(syncError);
+}
+
+function opKid(id, patch) {
+  if (!ready()) return;
+  if (!isRemote()) { Object.assign(kid(id), patch); save(); render(); return; }
+  const args = []; Object.entries(patch).forEach(([f, v]) => args.push(kidPath(id, f), v));
+  fb.updateDoc(famRef, ...args).catch(syncError);
+}
+function opAddKid() {
+  if (!ready()) return;
+  const n = state.kids.length;
+  const k = { id: uid(), name: `Enfant ${n + 1}`, points: 0, color: PALETTE[(n * 5) % PALETTE.length], icon: { type: 'emoji', value: KID_ICONS[n % KID_ICONS.length] } };
+  if (!isRemote()) { state.kids.push(k); save(); render(); return; }
+  fb.updateDoc(famRef, kidPath(k.id), { name: k.name, points: 0, color: k.color, icon: k.icon, order: Date.now() }).catch(syncError);
+}
+function opDelKid(id) {
+  if (!ready()) return;
+  if (!isRemote()) { state.kids = state.kids.filter(k => k.id !== id); save(); render(); return; }
+  fb.updateDoc(famRef, kidPath(id), fb.deleteField()).catch(syncError);
+}
+function opSaveReward(r) {
+  if (!ready()) return;
+  if (!isRemote()) {
+    const ex = state.rewards.find(x => x.id === r.id);
+    ex ? Object.assign(ex, r) : state.rewards.push(r); save(); render(); return;
+  }
+  fb.updateDoc(famRef, rewPath(r.id), { name: r.name, price: r.price, emoji: r.emoji }).catch(syncError);
+}
+function opDelReward(id) {
+  if (!ready()) return;
+  if (!isRemote()) { state.rewards = state.rewards.filter(x => x.id !== id); save(); render(); return; }
+  fb.updateDoc(famRef, rewPath(id), fb.deleteField()).catch(syncError);
+}
+async function opImport(data) {
+  if (!ready()) return;
+  const m = migrate(data);
+  if (!isRemote()) { state = m; save(); render(); toast('Sauvegarde importée'); return; }
+  try { await fb.setDoc(famRef, toRemote(m)); await uploadHistory(famRef, m.history.slice(0, 300)); toast('Sauvegarde importée pour toute la famille'); }
+  catch (e) { syncError(e); }
+}
+
+/* ---------- Fenêtres ---------- */
+function openDialog(html) { dlgBody.innerHTML = html; if (!dlg.open) dlg.showModal(); dlgBody.scrollTop = 0; }
+function closeDialog() { if (dlg.open) dlg.close(); }
+dlg.addEventListener('close', () => { if (pendingConfirm) { const r = pendingConfirm; pendingConfirm = null; r(false); } });
+dlg.addEventListener('click', e => { if (e.target === dlg) closeDialog(); });
+function confirmBox(title, msg, okLabel, danger) {
+  return new Promise(res => {
+    pendingConfirm = res;
+    openDialog(`<h2>${title}</h2><p>${msg}</p><div class="dlg-actions">
+      <button class="btn" data-action="confirm-no">Annuler</button>
+      <button class="btn ${danger ? 'btn-danger' : 'btn-primary'}" data-action="confirm-yes">${okLabel}</button></div>`);
+  });
+}
+
+/* ---------- Vues ---------- */
+function syncPill() {
+  const t = { connecting: '⏳ Connexion…', ok: '☁️ Synchronisé', pending: '📴 Hors ligne, envoi en attente', error: '⚠️ Synchro en erreur' }[syncStatus];
+  return t ? `<span class="pill ${syncStatus === 'error' ? 'warn' : ''}">${t}</span>` : '';
+}
+
+function renderPoints() {
+  return `<div class="title-row"><h1 class="view-title">Points</h1>${syncPill()}</div><div class="kids">${state.kids.map(k => {
+    const next = state.rewards.filter(r => r.price > k.points).sort((a, b) => a.price - b.price)[0];
+    let nextHTML = '';
+    if (next) nextHTML = `<div class="next"><div class="bar"><i style="width:${Math.max(0, Math.min(100, k.points / next.price * 100))}%"></i></div><span>Encore ${next.price - k.points} pour ${esc(next.emoji)} ${esc(next.name)}</span></div>`;
+    else if (state.rewards.length) nextHTML = `<div class="next"><span>Assez de points pour toutes les récompenses 🎉</span></div>`;
+    return `<section class="kid" data-kid="${k.id}" style="${kidStyle(k)}">
+      <div class="kid-top"><div class="avatar">${iconHTML(k.icon)}</div>
+        <div class="kid-info"><div class="kid-name">${esc(k.name)}</div>
+        <div class="kid-points"><span class="num">${k.points}</span><span class="unit">${pts(k.points)}</span></div></div></div>
+      ${nextHTML}
+      <div class="kid-actions">
+        <button class="btn-soft btn-minus" data-action="sub" data-kid="${k.id}" aria-label="Retirer un point à ${esc(k.name)}">−</button>
+        <button class="btn-soft" data-action="shop" data-kid="${k.id}">🎁 Échanger</button>
+        <button class="btn-plus" data-action="add" data-kid="${k.id}" aria-label="Ajouter un point à ${esc(k.name)}">+1</button>
+      </div></section>`;
+  }).join('')}</div>`;
+}
+
+function renderRewards() {
+  const list = [...state.rewards].sort((a, b) => a.price - b.price);
+  return `<h1 class="view-title">Récompenses</h1>
+    ${list.length ? `<ul class="list">${list.map(r => `<li class="row">
+      <span class="r-emoji">${esc(r.emoji)}</span>
+      <span class="row-main"><span class="row-title">${esc(r.name)}</span><span class="row-sub">${r.price} ${pts(r.price)}</span></span>
+      <button class="icon-btn" data-action="edit-reward" data-id="${r.id}" aria-label="Modifier ${esc(r.name)}">✏️</button>
+      <button class="icon-btn" data-action="del-reward" data-id="${r.id}" aria-label="Supprimer ${esc(r.name)}">🗑️</button></li>`).join('')}</ul>`
+      : `<p class="empty">Aucune récompense. Ajoute la première pour que les enfants puissent échanger leurs points.</p>`}
+    <button class="btn btn-primary btn-block" data-action="new-reward">＋ Ajouter une récompense</button>`;
+}
+
+function renderHistory() {
+  const h = state.history;
+  if (!h.length) return `<h1 class="view-title">Historique</h1><p class="empty">Les points gagnés et les récompenses échangées s’afficheront ici.</p>`;
+  return `<h1 class="view-title">Historique</h1><ul class="list">${h.slice(0, 300).map(e => {
+    const k = kid(e.kidId);
+    return `<li class="row"><span class="h-dot" style="background:${k ? k.color : '#999'}"></span>
+      <span class="row-main"><span class="row-title">${esc(k ? k.name : 'Enfant supprimé')}, ${esc(histLabel(e))}</span><span class="row-sub">${fmt.format(e.ts)}</span></span>
+      <span class="delta ${e.delta >= 0 ? 'pos' : 'neg'}">${e.delta > 0 ? '+' : ''}${e.delta}</span>
+      <button class="icon-btn" data-action="undo" data-id="${e.id}" aria-label="Annuler cette action">↩️</button></li>`;
+  }).join('')}</ul>`;
+}
+
+function renderSync() {
+  if (!hasConfig) return `<section class="card"><h2>Synchronisation</h2><p class="muted">Pour partager les points entre plusieurs téléphones, renseigne la configuration Firebase dans le fichier firebase-config.js (voir le guide).</p></section>`;
+  if (!familyCode) return `<section class="card"><h2>Synchronisation</h2>
+    <p class="muted">Partage les points, les récompenses et l’historique entre plusieurs téléphones.</p>
+    <button class="btn btn-primary btn-block" data-action="sync-create">Créer l’espace famille</button>
+    <button class="btn btn-block" data-action="sync-join">J’ai déjà un code famille</button></section>`;
+  return `<section class="card"><h2>Synchronisation</h2>${syncPill()}
+    <div class="code">${fmtCode(familyCode)}</div>
+    <p class="muted small">Sur l’autre téléphone : Réglages, puis « J’ai déjà un code famille ». Ce code donne accès aux points, ne le partage qu’avec la famille.</p>
+    <button class="btn" data-action="sync-share">📤 Partager le code</button>
+    <button class="link-danger" data-action="sync-leave">Arrêter la synchro sur ce téléphone</button></section>`;
+}
+
+function renderSettings() {
+  return `<h1 class="view-title">Réglages</h1>
+  ${state.kids.map(k => `<section class="card">
+    <div class="set-head">
+      <button class="avatar-btn" style="${kidStyle(k)}" data-action="pick-icon" data-kid="${k.id}" aria-label="Changer l’icône de ${esc(k.name)}">
+        <div class="avatar">${iconHTML(k.icon)}</div><span class="avatar-edit">✏️</span></button>
+      <label class="field grow"><span>Prénom</span><input data-kid-name="${k.id}" value="${esc(k.name)}" maxlength="20" autocomplete="off" enterkeyhint="done"></label>
+    </div>
+    <div class="field"><span>Couleur du compteur</span><div class="swatches">
+      ${PALETTE.map(c => `<button class="swatch ${c === k.color ? 'sel' : ''}" style="background:${c}" data-action="pick-color" data-kid="${k.id}" data-color="${c}" aria-label="Couleur ${c}"></button>`).join('')}
+      <label class="swatch swatch-custom ${PALETTE.includes(k.color) ? '' : 'sel'}" aria-label="Choisir n’importe quelle couleur"><input type="color" data-kid-color="${k.id}" value="${k.color}"></label>
+    </div></div>
+    ${state.kids.length > 1 ? `<button class="link-danger" data-action="del-kid" data-kid="${k.id}">Supprimer ${esc(k.name)}</button>` : ''}
+  </section>`).join('')}
+  <button class="btn btn-block" data-action="add-kid" style="margin-bottom:14px">＋ Ajouter un enfant</button>
+  ${renderSync()}
+  <section class="card"><h2>Sauvegarde</h2>
+    <p class="muted">Les points sont conservés lors des mises à jour. Exporte une sauvegarde de temps en temps, par sécurité.</p>
+    <div class="row-btns"><button class="btn" data-action="export">⬇️ Exporter</button>
+    <label class="btn">⬆️ Importer<input type="file" accept="application/json,.json" data-import hidden></label></div>
+  </section>
+  <p class="version">Version ${APP_VERSION}</p>`;
+}
+
+function render() {
+  // Ne pas effacer un prénom en cours de saisie quand l’autre téléphone envoie une modification
+  const ae = document.activeElement;
+  if (ae && ae.matches && ae.matches('input[data-kid-name]')) { needsRender = true; return; }
+  main.innerHTML = tab === 'rewards' ? renderRewards() : tab === 'history' ? renderHistory() : tab === 'settings' ? renderSettings() : renderPoints();
+  document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.tab === tab));
+  if (pendingBump) {
+    const n = document.querySelector(`.kid[data-kid="${pendingBump}"] .num`);
+    if (n) n.classList.add('bump');
+    pendingBump = null;
+  }
+}
+document.addEventListener('focusout', () => setTimeout(() => { if (needsRender) { needsRender = false; render(); } }, 0));
+
+/* ---------- Fenêtres métier ---------- */
+function openShop(kidId) {
+  const k = kid(kidId);
+  const list = [...state.rewards].sort((a, b) => a.price - b.price);
+  openDialog(`<h2>${esc(k.name)} a ${k.points} ${pts(k.points)}</h2>
+    ${list.length ? `<div class="shop-list">${list.map(r => {
+      const ok = k.points >= r.price;
+      return `<button class="shop-item" ${ok ? '' : 'disabled'} data-action="buy" data-kid="${k.id}" data-reward="${r.id}">
+        <span class="r-emoji">${esc(r.emoji)}</span><span class="r-name">${esc(r.name)}</span>
+        <span class="r-price">${ok ? r.price + ' pts' : 'encore ' + (r.price - k.points)}</span></button>`;
+    }).join('')}</div>` : `<p class="muted">Aucune récompense. Ajoute-en dans l’onglet Récompenses.</p>`}
+    <div class="dlg-actions"><button class="btn" data-action="close">Fermer</button></div>`);
+}
+
+function openRewardEditor(id) {
+  const r = id ? state.rewards.find(x => x.id === id) : { name: '', price: 10, emoji: '🎁' };
+  editingEmoji = r.emoji;
+  const icons = REWARD_ICONS.includes(r.emoji) ? REWARD_ICONS : [r.emoji, ...REWARD_ICONS];
+  openDialog(`<h2>${id ? 'Modifier la récompense' : 'Nouvelle récompense'}</h2>
+    <label class="field"><span>Nom</span><input id="r-name" value="${esc(r.name)}" maxlength="40" placeholder="Ex. : une glace" autocomplete="off"></label>
+    <label class="field"><span>Prix en points</span><input id="r-price" type="number" inputmode="numeric" min="1" max="9999" value="${r.price}"></label>
+    <div class="field"><span>Icône</span><div class="emoji-grid">${icons.map(e => `<button class="emoji-opt ${e === r.emoji ? 'sel' : ''}" data-action="pick-remoji" data-emoji="${esc(e)}">${esc(e)}</button>`).join('')}</div></div>
+    <div class="dlg-actions"><button class="btn" data-action="close">Annuler</button>
+    <button class="btn btn-primary" data-action="save-reward" data-id="${id || ''}">Enregistrer</button></div>`);
+}
+
+function openIconPicker(kidId) {
+  const k = kid(kidId);
+  openDialog(`<h2>Icône de ${esc(k.name)}</h2>
+    <label class="btn btn-primary btn-block">📷 Choisir une image du téléphone<input type="file" accept="image/*" data-icon-file="${k.id}" hidden></label>
+    <p class="muted small">Une photo ou une image enregistrée dans ta galerie. Elle sera réduite avant d’être enregistrée.</p>
+    <div class="emoji-grid">${KID_ICONS.map(e => `<button class="emoji-opt ${k.icon.type === 'emoji' && k.icon.value === e ? 'sel' : ''}" data-action="set-emoji" data-kid="${k.id}" data-emoji="${e}">${e}</button>`).join('')}</div>
+    <div class="dlg-actions"><button class="btn" data-action="close">Fermer</button></div>`);
+}
+
+function openJoin() {
+  openDialog(`<h2>Rejoindre l’espace famille</h2>
+    <p class="muted">Les points de ce téléphone seront remplacés par ceux de l’espace famille.</p>
+    <label class="field"><span>Code famille</span><input id="join-code" autocapitalize="characters" autocomplete="off" spellcheck="false" placeholder="XXXX-XXXX-XXXX" maxlength="18"></label>
+    <div class="dlg-actions"><button class="btn" data-action="close">Annuler</button>
+    <button class="btn btn-primary" data-action="sync-join-go">Rejoindre</button></div>`);
+  setTimeout(() => $('#join-code') && $('#join-code').focus(), 50);
+}
+
+function resizeImage(file, size = 256) {
+  return new Promise((res, rej) => {
+    const url = URL.createObjectURL(file), img = new Image();
+    img.onload = () => {
+      const c = document.createElement('canvas'); c.width = c.height = size;
+      const s = Math.min(size / img.width, size / img.height), w = img.width * s, h = img.height * s;
+      c.getContext('2d').drawImage(img, (size - w) / 2, (size - h) / 2, w, h);
+      URL.revokeObjectURL(url); res(c.toDataURL('image/webp', 0.85));
+    };
+    img.onerror = () => { URL.revokeObjectURL(url); rej(new Error('image')); };
+    img.src = url;
+  });
+}
+
+function exportData() {
+  const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `points-sauvegarde-${new Date().toISOString().slice(0, 10)}.json`;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+  toast('Sauvegarde exportée dans Téléchargements');
+}
+
+async function importData(file) {
+  let data;
+  try { data = JSON.parse(await file.text()); if (!data || !Array.isArray(data.kids)) throw 0; }
+  catch (e) { toast('Ce fichier n’est pas une sauvegarde de l’application.'); return; }
+  const msg = isRemote() ? 'Les points, récompenses et réglages seront remplacés sur tous les téléphones de la famille.' : 'Les points, récompenses et réglages de ce téléphone seront remplacés.';
+  if (await confirmBox('Importer la sauvegarde ?', msg, 'Importer', true)) await opImport(data);
+}
+
+/* ---------- Événements ---------- */
+document.addEventListener('click', async e => {
+  const b = e.target.closest('[data-action]');
+  if (!b) return;
+  const a = b.dataset.action, k = b.dataset.kid ? kid(b.dataset.kid) : null;
+  switch (a) {
+    case 'tab': tab = b.dataset.tab; render(); window.scrollTo(0, 0); break;
+    case 'add': opPoints(k, 1, 'add'); vibrate(15); break;
+    case 'sub':
+      if (k.points <= 0) { toast(`${k.name} est déjà à 0`); break; }
+      opPoints(k, -1, 'sub'); break;
+    case 'shop': openShop(k.id); break;
+    case 'buy': {
+      const r = state.rewards.find(x => x.id === b.dataset.reward);
+      if (!r || k.points < r.price) break;
+      const ok = await confirmBox(`${esc(r.emoji)} ${esc(r.name)}`, `Échanger ${r.price} ${pts(r.price)} de ${esc(k.name)} ? Il en restera ${k.points - r.price}.`, 'Échanger');
+      if (!ok) break;
+      const cur = kid(k.id);
+      if (!cur || cur.points < r.price) { toast('Plus assez de points'); break; }
+      opPoints(cur, -r.price, 'buy', `${r.emoji} ${r.name}`);
+      celebrate(r.emoji); vibrate([30, 60, 30]); toast(`Bravo ${cur.name} !`);
+      break;
+    }
+    case 'close': closeDialog(); break;
+    case 'confirm-yes': case 'confirm-no': {
+      const r = pendingConfirm; pendingConfirm = null; closeDialog(); r && r(a === 'confirm-yes'); break;
+    }
+    case 'new-reward': openRewardEditor(null); break;
+    case 'edit-reward': openRewardEditor(b.dataset.id); break;
+    case 'pick-remoji':
+      editingEmoji = b.dataset.emoji;
+      dlgBody.querySelectorAll('.emoji-opt').forEach(x => x.classList.toggle('sel', x === b)); break;
+    case 'save-reward': {
+      const name = $('#r-name').value.trim(), price = parseInt($('#r-price').value, 10);
+      if (!name) { $('#r-name').focus(); toast('Donne un nom à la récompense'); break; }
+      if (!(price >= 1)) { $('#r-price').focus(); toast('Le prix doit être d’au moins 1 point'); break; }
+      const id = b.dataset.id;
+      closeDialog(); opSaveReward({ id: id || uid(), name, price, emoji: editingEmoji });
+      toast(id ? 'Récompense modifiée' : 'Récompense ajoutée'); break;
+    }
+    case 'del-reward': {
+      const r = state.rewards.find(x => x.id === b.dataset.id);
+      if (await confirmBox('Supprimer la récompense ?', `${esc(r.emoji)} ${esc(r.name)} ne sera plus proposée.`, 'Supprimer', true)) opDelReward(r.id);
+      break;
+    }
+    case 'undo': {
+      const h = state.history.find(x => x.id === b.dataset.id); if (!h) break;
+      const kk = kid(h.kidId);
+      if (await confirmBox('Annuler cette action ?', `${esc(kk ? kk.name : 'Enfant supprimé')}, ${esc(histLabel(h))} (${h.delta > 0 ? '+' : ''}${h.delta}).`, 'Annuler l’action')) {
+        opUndo(h); toast('Action annulée');
+      }
+      break;
+    }
+    case 'pick-icon': openIconPicker(k.id); break;
+    case 'set-emoji': closeDialog(); opKid(k.id, { icon: { type: 'emoji', value: b.dataset.emoji } }); break;
+    case 'pick-color': opKid(k.id, { color: b.dataset.color }); break;
+    case 'add-kid': opAddKid(); break;
+    case 'del-kid':
+      if (await confirmBox(`Supprimer ${esc(k.name)} ?`, `Ses ${k.points} ${pts(k.points)} seront perdus.`, 'Supprimer', true)) opDelKid(k.id);
+      break;
+    case 'export': exportData(); break;
+    case 'sync-create':
+      if (await confirmBox('Créer l’espace famille ?', 'Les points, récompenses et réglages de ce téléphone deviendront ceux de toute la famille.', 'Créer')) await createFamily();
+      break;
+    case 'sync-join': openJoin(); break;
+    case 'sync-join-go': {
+      const code = normCode($('#join-code').value);
+      if (code.length !== 12) { toast('Le code fait 12 caractères'); break; }
+      closeDialog(); await joinFamily(code); break;
+    }
+    case 'sync-share': shareCode(); break;
+    case 'sync-leave': leaveFamily(); break;
+  }
+});
+
+document.addEventListener('change', async e => {
+  const t = e.target;
+  if (t.dataset.kidName) { t.blur(); opKid(t.dataset.kidName, { name: t.value.trim() || 'Enfant' }); }
+  else if (t.dataset.kidColor) opKid(t.dataset.kidColor, { color: t.value.toLowerCase() });
+  else if (t.dataset.iconFile && t.files[0]) {
+    try { const value = await resizeImage(t.files[0]); closeDialog(); opKid(t.dataset.iconFile, { icon: { type: 'image', value } }); }
+    catch (err) { toast('Cette image n’a pas pu être ouverte. Essaie une autre image.'); }
+  }
+  else if (t.hasAttribute('data-import') && t.files[0]) await importData(t.files[0]);
+  if (t.type === 'file') t.value = '';
+});
+document.addEventListener('keydown', e => { if (e.key === 'Enter' && e.target.matches('input[data-kid-name]')) e.target.blur(); });
+
+/* ---------- Démarrage ---------- */
+if ('serviceWorker' in navigator && location.protocol === 'https:') navigator.serviceWorker.register('sw.js').catch(() => {});
+try { navigator.storage && navigator.storage.persist && navigator.storage.persist(); } catch (e) {}
+render();
+if (hasConfig && familyCode) startSync(familyCode);
+</script>
+</body>
+</html>

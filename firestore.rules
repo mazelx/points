@@ -1,0 +1,13 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Un espace par famille, identifié par un code secret de 12 caractères.
+    // Impossible de lister les familles : il faut connaître le code.
+    match /families/{familyId} {
+      allow get, create, update: if familyId.size() == 12;
+      match /history/{entryId} {
+        allow read, write: if familyId.size() == 12;
+      }
+    }
+  }
+}

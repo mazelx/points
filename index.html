@@ -65,8 +65,8 @@ main{max-width:760px;margin:0 auto;padding:18px 16px calc(100px + env(safe-area-
 .btn-soft:active,.btn-plus:active{transform:scale(.95)}
 
 /* Navigation */
-.tabs{position:fixed;left:0;right:0;bottom:0;z-index:5;background:var(--surface);border-top:1px solid var(--border);display:grid;grid-template-columns:repeat(4,1fr);gap:4px;padding:6px 8px calc(6px + env(safe-area-inset-bottom,0px))}
-.tab{display:grid;justify-items:center;gap:0;padding:6px 0 4px;border-radius:16px;font-size:13px;font-weight:700;color:var(--muted)}
+.tabs{position:fixed;left:0;right:0;bottom:0;z-index:5;background:var(--surface);border-top:1px solid var(--border);display:grid;grid-template-columns:repeat(5,1fr);gap:2px;padding:6px 4px calc(6px + env(safe-area-inset-bottom,0px))}
+.tab{display:grid;justify-items:center;gap:0;padding:6px 0 4px;border-radius:16px;font-size:12px;font-weight:700;color:var(--muted);min-width:0;white-space:nowrap}
 .tab b{font-size:22px;font-weight:400;line-height:1.2;filter:grayscale(1);opacity:.6}
 .tab.active{color:var(--accent);background:var(--surface-2)}
 .tab.active b{filter:none;opacity:1}
@@ -103,8 +103,14 @@ main{max-width:760px;margin:0 auto;padding:18px 16px calc(100px + env(safe-area-
 .swatches{display:grid;grid-template-columns:repeat(auto-fill,minmax(40px,1fr));gap:8px}
 .swatch{aspect-ratio:1;border-radius:50%;box-shadow:inset 0 0 0 1px rgba(0,0,0,.12);position:relative}
 .swatch.sel{outline:3px solid var(--text);outline-offset:2px}
-.swatch-custom{background:conic-gradient(#f44,#fd3,#4e6,#3df,#46f,#d4f,#f44);overflow:hidden;cursor:pointer}
-.swatch-custom input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;border:0;padding:0}
+.swatch-custom{background:conic-gradient(#f44,#fd3,#4e6,#3df,#46f,#d4f,#f44)}
+.hsv-sv,.hsv-hue{position:relative;width:min(100%,320px);justify-self:center;touch-action:none;cursor:pointer}
+.hsv-sv{aspect-ratio:1;border-radius:18px;background-image:linear-gradient(to top,#000,transparent),linear-gradient(to right,#fff,transparent)}
+.hsv-hue{height:36px;border-radius:99px;background:linear-gradient(to right,#f00,#ff0,#0f0,#0ff,#00f,#f0f,#f00)}
+.hsv-sv i,.hsv-hue i{position:absolute;width:30px;height:30px;border-radius:50%;border:3px solid #fff;box-shadow:0 0 0 1px rgba(0,0,0,.35),0 2px 6px rgba(0,0,0,.4);transform:translate(-50%,-50%);pointer-events:none}
+.hsv-hue i{top:50%}
+.hsv-preview{padding:14px 18px;border-radius:24px}
+.hsv-preview .avatar{width:56px;height:56px;font-size:32px}
 .emoji-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(50px,1fr));gap:6px}
 .emoji-opt{aspect-ratio:1;font-size:28px;border-radius:14px;background:var(--surface-2);line-height:1}
 .emoji-opt.sel{outline:3px solid var(--accent);outline-offset:1px}
@@ -120,7 +126,7 @@ main{max-width:760px;margin:0 auto;padding:18px 16px calc(100px + env(safe-area-
 .code{font-size:30px;font-weight:800;letter-spacing:.08em;text-align:center;background:var(--surface-2);border-radius:16px;padding:10px;font-variant-numeric:tabular-nums}
 
 /* Fenêtres */
-dialog{border:0;padding:0;background:var(--surface);color:var(--text);border-radius:28px;width:min(560px,calc(100vw - 24px));max-height:calc(100dvh - 40px);box-shadow:0 24px 60px rgba(0,0,0,.35)}
+dialog{margin:auto;border:0;padding:0;background:var(--surface);color:var(--text);border-radius:28px;width:min(560px,calc(100vw - 24px));max-height:calc(100dvh - 40px);box-shadow:0 24px 60px rgba(0,0,0,.35)}
 dialog::backdrop{background:rgba(20,12,50,.5)}
 .dlg-body{padding:20px;display:grid;gap:16px;overflow:auto;max-height:calc(100dvh - 40px)}
 .dlg-body h2{font-size:24px;font-weight:800;line-height:1.15}
@@ -132,6 +138,12 @@ dialog::backdrop{background:rgba(20,12,50,.5)}
 .r-price{font-weight:800;background:var(--accent);color:var(--accent-text);border-radius:99px;padding:3px 12px;font-size:15px;white-space:nowrap}
 .shop-item:disabled{opacity:.6;cursor:default}
 .shop-item:disabled .r-price{background:transparent;color:var(--muted);box-shadow:inset 0 0 0 1px var(--border)}
+.r-price.neg{background:var(--danger);color:#fff}
+.row-hit{flex:1;min-width:0;display:flex;align-items:center;gap:12px;text-align:left;padding:4px 0}
+.row-hit:active{opacity:.6}
+.kid-pick{display:flex;align-items:center;gap:14px;width:100%;padding:10px 18px 10px 10px;border-radius:24px;background:var(--kid-bg);color:var(--kid-fg);font-size:22px;font-weight:700;text-align:left}
+.kid-pick .avatar{width:56px;height:56px;font-size:32px}
+.kid-pick:active{transform:scale(.97)}
 
 .toast{position:fixed;left:50%;bottom:calc(96px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--text);color:var(--bg);padding:12px 18px;border-radius:16px;font-weight:700;z-index:20;max-width:calc(100vw - 32px);text-align:center}
 .celebrate{position:fixed;inset:0;display:grid;place-items:center;font-size:150px;pointer-events:none;z-index:30;animation:pop 1.2s ease forwards}
@@ -144,6 +156,7 @@ dialog::backdrop{background:rgba(20,12,50,.5)}
 
 <nav class="tabs" aria-label="Navigation">
   <button class="tab" data-action="tab" data-tab="points"><b>⭐</b>Points</button>
+  <button class="tab" data-action="tab" data-tab="actions"><b>📋</b>Barème</button>
   <button class="tab" data-action="tab" data-tab="rewards"><b>🎁</b>Récompenses</button>
   <button class="tab" data-action="tab" data-tab="history"><b>📜</b>Historique</button>
   <button class="tab" data-action="tab" data-tab="settings"><b>⚙️</b>Réglages</button>
@@ -153,13 +166,14 @@ dialog::backdrop{background:rgba(20,12,50,.5)}
 
 <script src="firebase-config.js"></script>
 <script>
-const APP_VERSION = '1.1.0';
+const APP_VERSION = '1.2.0';
 const STORE_KEY = 'points-recompenses:v1';
 const SYNC_KEY = 'points-recompenses:famille';
 const FB_URL = 'https://www.gstatic.com/firebasejs/10.12.2';
 
 const KID_ICONS = ['⭐','🦄','🐉','🦖','🐱','🐶','🐻','🐷','🐹','🐭','🐰','🦊','🐼','🐨','🦁','🐯','🐸','🐵','🦉','🐧','🐢','🐙','🦋','🐞','🐬','🦈','🚀','🚗','🚒','🚜','⚽','🏀','🎨','🎸','🌈','⚡','🔥','👑','💎','🏰','🧸','🤖'];
 const REWARD_ICONS = ['🎁','🍦','🍫','🍬','🍭','🍩','🍕','🍔','🍟','🍿','📺','🎮','🎬','📱','🧸','🚲','🏊','🎡','🌳','📚','🎨','⚽','🛁','🌙','⏰','🎟️','🛍️','🎉'];
+const ACTION_ICONS = ['🧹','🛏️','🧺','🍽️','🗑️','🪥','🛁','🚿','👕','🧦','👟','🎒','📚','✏️','🎹','⚽','🥦','🍎','🥛','💤','⏰','🐶','🌱','🧸','🤝','🙏','😊','👍','⭐','😠','🙉','⚠️'];
 const PALETTE = ['#ef476f','#ff6b6b','#e63946','#f3722c','#f8961e','#ffb703','#ffd166','#f9e076','#90be6d','#43aa8b','#06d6a0','#2a9d8f','#4cc9f0','#4895ef','#4361ee','#3a0ca3','#7209b7','#b5179e','#f72585','#ff8fab','#cdb4db','#a2d2ff','#8d99ae','#2b2d42','#6d4c41','#ffffff'];
 
 const uid = () => Math.random().toString(36).slice(2, 9) + Date.now().toString(36);
@@ -179,6 +193,13 @@ function defaults() {
       { id: uid(), name: 'Choisir le dîner', price: 20, emoji: '🍕' },
       { id: uid(), name: 'Sortie au parc', price: 30, emoji: '🌳' }
     ],
+    actions: [
+      { id: uid(), name: 'Ranger sa chambre', points: 2, emoji: '🧹' },
+      { id: uid(), name: 'Mettre la table', points: 1, emoji: '🍽️' },
+      { id: uid(), name: 'Se brosser les dents', points: 1, emoji: '🪥' },
+      { id: uid(), name: 'Faire ses devoirs', points: 2, emoji: '📚' },
+      { id: uid(), name: 'Dispute', points: -1, emoji: '😠' }
+    ],
     history: []
   };
 }
@@ -197,8 +218,11 @@ function migrate(s) {
   const rewards = (Array.isArray(s && s.rewards) ? s.rewards : d.rewards).filter(r => r && r.id).map(r => ({
     id: String(r.id), name: String(r.name ?? '').slice(0, 60), price: Math.max(1, parseInt(r.price, 10) || 1), emoji: String(r.emoji || '🎁')
   }));
+  const actions = (Array.isArray(s && s.actions) ? s.actions : d.actions).filter(a => a && a.id).map(a => ({
+    id: String(a.id), name: String(a.name ?? '').slice(0, 60), points: Math.max(-999, Math.min(999, parseInt(a.points, 10) || 1)), emoji: String(a.emoji || '⭐')
+  }));
   const history = (Array.isArray(s && s.history) ? s.history : []).filter(h => h && h.id).slice(0, 1000);
-  return { version: 1, kids: kids.length ? kids : d.kids, rewards, history };
+  return { version: 1, kids: kids.length ? kids : d.kids, rewards, actions, history };
 }
 
 function load() {
@@ -245,11 +269,23 @@ function celebrate(emoji) {
   const el = document.createElement('div'); el.className = 'celebrate'; el.textContent = emoji;
   document.body.appendChild(el); setTimeout(() => el.remove(), 1300);
 }
+const signed = n => (n > 0 ? '+' : '') + n;
 function histLabel(e) {
+  if (e.label) return e.label;
   const n = Math.abs(e.delta);
   if (e.type === 'add') return `${n} ${pts(n)} gagné${n > 1 ? 's' : ''}`;
-  if (e.type === 'sub') return `${n} ${pts(n)} retiré${n > 1 ? 's' : ''}`;
-  return e.label;
+  return `${n} ${pts(n)} retiré${n > 1 ? 's' : ''}`;
+}
+function hexToHsv(hex) {
+  const n = parseInt(hex.slice(1), 16), r = (n >> 16 & 255) / 255, g = (n >> 8 & 255) / 255, b = (n & 255) / 255;
+  const max = Math.max(r, g, b), d = max - Math.min(r, g, b);
+  let h = 0;
+  if (d) h = 60 * (max === r ? (g - b) / d + (g < b ? 6 : 0) : max === g ? (b - r) / d + 2 : (r - g) / d + 4);
+  return { h, s: max ? d / max : 0, v: max };
+}
+function hsvToHex(h, s, v) {
+  const f = n => { const k = (n + h / 60) % 6; return v - v * s * Math.max(0, Math.min(k, 4 - k, 1)); };
+  return '#' + [f(5), f(3), f(1)].map(x => Math.round(x * 255).toString(16).padStart(2, '0')).join('');
 }
 
 /* ---------- Synchro Firebase ---------- */
@@ -272,11 +308,12 @@ async function loadFirebase() {
   fb = fs;
 }
 const kidPath = (id, f) => f ? new fb.FieldPath('kids', id, f) : new fb.FieldPath('kids', id);
-const rewPath = id => new fb.FieldPath('rewards', id);
+const actionsRemote = list => Object.fromEntries(list.map(a => [a.id, { name: a.name, points: a.points, emoji: a.emoji }]));
 function toRemote(s) {
   return {
     kids: Object.fromEntries(s.kids.map((k, i) => [k.id, { name: k.name, points: k.points, color: k.color, icon: k.icon, order: i }])),
     rewards: Object.fromEntries(s.rewards.map(r => [r.id, { name: r.name, price: r.price, emoji: r.emoji }])),
+    actions: actionsRemote(s.actions),
     updatedAt: Date.now()
   };
 }
@@ -303,8 +340,11 @@ async function startSync(code) {
     const d = snap.data();
     const kids = Object.entries(d.kids || {}).map(([id, k]) => ({ id, ...k })).sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
     const rewards = Object.entries(d.rewards || {}).map(([id, r]) => ({ id, ...r }));
-    const m = migrate({ kids, rewards });
-    state.kids = m.kids; state.rewards = m.rewards;
+    const actions = d.actions ? Object.entries(d.actions).map(([id, a]) => ({ id, ...a })) : state.actions;
+    // Espace créé avant la v1.2.0 : on y envoie le barème de ce téléphone, une seule fois
+    if (!d.actions && !snap.metadata.fromCache) fb.updateDoc(famRef, 'actions', actionsRemote(state.actions)).catch(syncError);
+    const m = migrate({ kids, rewards, actions });
+    state.kids = m.kids; state.rewards = m.rewards; state.actions = m.actions;
     syncStatus = snap.metadata.hasPendingWrites || snap.metadata.fromCache ? 'pending' : 'ok';
     save(); render();
   }, err => { console.warn(err); syncStatus = 'error'; render(); }));
@@ -358,7 +398,7 @@ function opPoints(k, delta, type, label) {
   if (!ready()) return;
   pendingBump = k.id;
   const now = Date.now();
-  const merge = (type === 'add' || type === 'sub');
+  const merge = (type === 'add' || type === 'sub') && !label;
   if (!isRemote()) {
     const last = state.history[0];
     k.points += delta;
@@ -407,18 +447,20 @@ function opDelKid(id) {
   if (!isRemote()) { state.kids = state.kids.filter(k => k.id !== id); save(); render(); return; }
   fb.updateDoc(famRef, kidPath(id), fb.deleteField()).catch(syncError);
 }
-function opSaveReward(r) {
+// coll : 'rewards' ou 'actions'
+function opSaveItem(coll, item) {
   if (!ready()) return;
   if (!isRemote()) {
-    const ex = state.rewards.find(x => x.id === r.id);
-    ex ? Object.assign(ex, r) : state.rewards.push(r); save(); render(); return;
+    const ex = state[coll].find(x => x.id === item.id);
+    ex ? Object.assign(ex, item) : state[coll].push(item); save(); render(); return;
   }
-  fb.updateDoc(famRef, rewPath(r.id), { name: r.name, price: r.price, emoji: r.emoji }).catch(syncError);
+  const { id, ...data } = item;
+  fb.updateDoc(famRef, new fb.FieldPath(coll, id), data).catch(syncError);
 }
-function opDelReward(id) {
+function opDelItem(coll, id) {
   if (!ready()) return;
-  if (!isRemote()) { state.rewards = state.rewards.filter(x => x.id !== id); save(); render(); return; }
-  fb.updateDoc(famRef, rewPath(id), fb.deleteField()).catch(syncError);
+  if (!isRemote()) { state[coll] = state[coll].filter(x => x.id !== id); save(); render(); return; }
+  fb.updateDoc(famRef, new fb.FieldPath(coll, id), fb.deleteField()).catch(syncError);
 }
 async function opImport(data) {
   if (!ready()) return;
@@ -479,6 +521,21 @@ function renderRewards() {
     <button class="btn btn-primary btn-block" data-action="new-reward">＋ Ajouter une récompense</button>`;
 }
 
+function renderActions() {
+  const list = [...state.actions].sort((a, b) => b.points - a.points || a.name.localeCompare(b.name));
+  return `<h1 class="view-title">Barème</h1>
+    ${list.length ? `<ul class="list">${list.map(a => `<li class="row">
+      <button class="row-hit" data-action="award" data-id="${a.id}">
+        <span class="r-emoji">${esc(a.emoji)}</span>
+        <span class="row-main"><span class="row-title">${esc(a.name)}</span></span>
+        <span class="r-price ${a.points < 0 ? 'neg' : ''}">${signed(a.points)}</span></button>
+      <button class="icon-btn" data-action="edit-action" data-id="${a.id}" aria-label="Modifier ${esc(a.name)}">✏️</button>
+      <button class="icon-btn" data-action="del-action" data-id="${a.id}" aria-label="Supprimer ${esc(a.name)}">🗑️</button></li>`).join('')}</ul>
+      <p class="muted small" style="margin:-6px 4px 14px">Touche une action pour donner les points à un enfant.</p>`
+      : `<p class="empty">Aucune action. Ajoute ce qui fait gagner ou perdre des points : ranger sa chambre, mettre la table…</p>`}
+    <button class="btn btn-primary btn-block" data-action="new-action">＋ Ajouter une action</button>`;
+}
+
 function renderHistory() {
   const h = state.history;
   if (!h.length) return `<h1 class="view-title">Historique</h1><p class="empty">Les points gagnés et les récompenses échangées s’afficheront ici.</p>`;
@@ -514,7 +571,7 @@ function renderSettings() {
     </div>
     <div class="field"><span>Couleur du compteur</span><div class="swatches">
       ${PALETTE.map(c => `<button class="swatch ${c === k.color ? 'sel' : ''}" style="background:${c}" data-action="pick-color" data-kid="${k.id}" data-color="${c}" aria-label="Couleur ${c}"></button>`).join('')}
-      <label class="swatch swatch-custom ${PALETTE.includes(k.color) ? '' : 'sel'}" aria-label="Choisir n’importe quelle couleur"><input type="color" data-kid-color="${k.id}" value="${k.color}"></label>
+      <button class="swatch swatch-custom ${PALETTE.includes(k.color) ? '' : 'sel'}" data-action="custom-color" data-kid="${k.id}" aria-label="Choisir n’importe quelle couleur"></button>
     </div></div>
     ${state.kids.length > 1 ? `<button class="link-danger" data-action="del-kid" data-kid="${k.id}">Supprimer ${esc(k.name)}</button>` : ''}
   </section>`).join('')}
@@ -532,7 +589,7 @@ function render() {
   // Ne pas effacer un prénom en cours de saisie quand l’autre téléphone envoie une modification
   const ae = document.activeElement;
   if (ae && ae.matches && ae.matches('input[data-kid-name]')) { needsRender = true; return; }
-  main.innerHTML = tab === 'rewards' ? renderRewards() : tab === 'history' ? renderHistory() : tab === 'settings' ? renderSettings() : renderPoints();
+  main.innerHTML = tab === 'actions' ? renderActions() : tab === 'rewards' ? renderRewards() : tab === 'history' ? renderHistory() : tab === 'settings' ? renderSettings() : renderPoints();
   document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.tab === tab));
   if (pendingBump) {
     const n = document.querySelector(`.kid[data-kid="${pendingBump}"] .num`);
@@ -556,17 +613,75 @@ function openShop(kidId) {
     <div class="dlg-actions"><button class="btn" data-action="close">Fermer</button></div>`);
 }
 
+function emojiField(choices, current) {
+  editingEmoji = current;
+  const icons = choices.includes(current) ? choices : [current, ...choices];
+  return `<div class="field"><span>Icône</span><div class="emoji-grid">${icons.map(e => `<button class="emoji-opt ${e === current ? 'sel' : ''}" data-action="pick-remoji" data-emoji="${esc(e)}">${esc(e)}</button>`).join('')}</div></div>`;
+}
+
 function openRewardEditor(id) {
   const r = id ? state.rewards.find(x => x.id === id) : { name: '', price: 10, emoji: '🎁' };
-  editingEmoji = r.emoji;
-  const icons = REWARD_ICONS.includes(r.emoji) ? REWARD_ICONS : [r.emoji, ...REWARD_ICONS];
   openDialog(`<h2>${id ? 'Modifier la récompense' : 'Nouvelle récompense'}</h2>
     <label class="field"><span>Nom</span><input id="r-name" value="${esc(r.name)}" maxlength="40" placeholder="Ex. : une glace" autocomplete="off"></label>
     <label class="field"><span>Prix en points</span><input id="r-price" type="number" inputmode="numeric" min="1" max="9999" value="${r.price}"></label>
-    <div class="field"><span>Icône</span><div class="emoji-grid">${icons.map(e => `<button class="emoji-opt ${e === r.emoji ? 'sel' : ''}" data-action="pick-remoji" data-emoji="${esc(e)}">${esc(e)}</button>`).join('')}</div></div>
+    ${emojiField(REWARD_ICONS, r.emoji)}
     <div class="dlg-actions"><button class="btn" data-action="close">Annuler</button>
     <button class="btn btn-primary" data-action="save-reward" data-id="${id || ''}">Enregistrer</button></div>`);
 }
+
+function openActionEditor(id) {
+  const a = id ? state.actions.find(x => x.id === id) : { name: '', points: 1, emoji: '🧹' };
+  openDialog(`<h2>${id ? 'Modifier l’action' : 'Nouvelle action'}</h2>
+    <label class="field"><span>Action</span><input id="a-name" value="${esc(a.name)}" maxlength="40" placeholder="Ex. : ranger sa chambre" autocomplete="off"></label>
+    <label class="field"><span>Points (négatif pour en retirer, ex. −2)</span><input id="a-points" type="number" inputmode="numeric" min="-999" max="999" value="${a.points}"></label>
+    ${emojiField(ACTION_ICONS, a.emoji)}
+    <div class="dlg-actions"><button class="btn" data-action="close">Annuler</button>
+    <button class="btn btn-primary" data-action="save-action" data-id="${id || ''}">Enregistrer</button></div>`);
+}
+
+function openAward(id) {
+  const a = state.actions.find(x => x.id === id);
+  const n = Math.abs(a.points);
+  openDialog(`<h2>${esc(a.emoji)} ${esc(a.name)}</h2>
+    <p class="muted">Qui ${a.points > 0 ? 'gagne' : 'perd'} ${n} ${pts(n)} ?</p>
+    <div class="shop-list">${state.kids.map(k => `<button class="kid-pick" style="${kidStyle(k)}" data-action="award-kid" data-kid="${k.id}" data-id="${a.id}">
+      <span class="avatar">${iconHTML(k.icon)}</span><span class="grow">${esc(k.name)}</span><span class="unit">${k.points} pts</span></button>`).join('')}</div>
+    <div class="dlg-actions"><button class="btn" data-action="close">Annuler</button></div>`);
+}
+
+let picker = null;
+function openColorPicker(kidId) {
+  const k = kid(kidId);
+  picker = { kidId, ...hexToHsv(k.color) };
+  openDialog(`<h2>Couleur de ${esc(k.name)}</h2>
+    <div class="hsv-sv" data-drag="sv"><i></i></div>
+    <div class="hsv-hue" data-drag="hue"><i></i></div>
+    <div class="kid hsv-preview"><div class="kid-top"><div class="avatar">${iconHTML(k.icon)}</div><div class="kid-name">${esc(k.name)}</div></div></div>
+    <div class="dlg-actions"><button class="btn" data-action="close">Annuler</button>
+    <button class="btn btn-primary" data-action="save-color">Valider</button></div>`);
+  updatePicker();
+}
+function updatePicker() {
+  const hex = hsvToHex(picker.h, picker.s, picker.v), hue = `hsl(${picker.h} 100% 50%)`;
+  const sv = dlgBody.querySelector('.hsv-sv'), bar = dlgBody.querySelector('.hsv-hue');
+  sv.style.backgroundColor = hue;
+  Object.assign(sv.querySelector('i').style, { left: picker.s * 100 + '%', top: (1 - picker.v) * 100 + '%', background: hex });
+  Object.assign(bar.querySelector('i').style, { left: picker.h / 360 * 100 + '%', background: hue });
+  dlgBody.querySelector('.hsv-preview').setAttribute('style', kidStyle({ color: hex }));
+}
+document.addEventListener('pointerdown', e => {
+  const el = e.target.closest('[data-drag]');
+  if (!el || !picker) return;
+  const move = ev => {
+    const r = el.getBoundingClientRect();
+    const x = Math.min(1, Math.max(0, (ev.clientX - r.left) / r.width)), y = Math.min(1, Math.max(0, (ev.clientY - r.top) / r.height));
+    if (el.dataset.drag === 'sv') { picker.s = x; picker.v = 1 - y; } else picker.h = Math.min(x * 360, 359.9);
+    updatePicker();
+  };
+  el.setPointerCapture(e.pointerId); move(e);
+  el.onpointermove = move;
+  el.onpointerup = el.onpointercancel = () => { el.onpointermove = null; };
+});
 
 function openIconPicker(kidId) {
   const k = kid(kidId);
@@ -655,14 +770,42 @@ document.addEventListener('click', async e => {
       if (!name) { $('#r-name').focus(); toast('Donne un nom à la récompense'); break; }
       if (!(price >= 1)) { $('#r-price').focus(); toast('Le prix doit être d’au moins 1 point'); break; }
       const id = b.dataset.id;
-      closeDialog(); opSaveReward({ id: id || uid(), name, price, emoji: editingEmoji });
+      closeDialog(); opSaveItem('rewards', { id: id || uid(), name, price, emoji: editingEmoji });
       toast(id ? 'Récompense modifiée' : 'Récompense ajoutée'); break;
     }
     case 'del-reward': {
       const r = state.rewards.find(x => x.id === b.dataset.id);
-      if (await confirmBox('Supprimer la récompense ?', `${esc(r.emoji)} ${esc(r.name)} ne sera plus proposée.`, 'Supprimer', true)) opDelReward(r.id);
+      if (await confirmBox('Supprimer la récompense ?', `${esc(r.emoji)} ${esc(r.name)} ne sera plus proposée.`, 'Supprimer', true)) opDelItem('rewards', r.id);
       break;
     }
+    case 'new-action': openActionEditor(null); break;
+    case 'edit-action': openActionEditor(b.dataset.id); break;
+    case 'save-action': {
+      const name = $('#a-name').value.trim(), points = parseInt($('#a-points').value, 10);
+      if (!name) { $('#a-name').focus(); toast('Donne un nom à l’action'); break; }
+      if (!points || Math.abs(points) > 999) { $('#a-points').focus(); toast('Les points vont de −999 à 999, sans 0'); break; }
+      const id = b.dataset.id;
+      closeDialog(); opSaveItem('actions', { id: id || uid(), name, points, emoji: editingEmoji });
+      toast(id ? 'Action modifiée' : 'Action ajoutée'); break;
+    }
+    case 'del-action': {
+      const x = state.actions.find(y => y.id === b.dataset.id);
+      if (await confirmBox('Supprimer l’action ?', `${esc(x.emoji)} ${esc(x.name)} sera retirée du barème.`, 'Supprimer', true)) opDelItem('actions', x.id);
+      break;
+    }
+    case 'award': openAward(b.dataset.id); break;
+    case 'award-kid': {
+      const x = state.actions.find(y => y.id === b.dataset.id);
+      closeDialog();
+      if (!x || !k) break;
+      const delta = Math.max(x.points, -k.points);
+      if (!delta) { toast(`${k.name} est déjà à 0`); break; }
+      opPoints(k, delta, delta > 0 ? 'add' : 'sub', `${x.emoji} ${x.name}`);
+      if (delta > 0) { celebrate(x.emoji); vibrate(15); }
+      toast(`${signed(delta)} ${pts(delta)} pour ${k.name}`); break;
+    }
+    case 'custom-color': openColorPicker(k.id); break;
+    case 'save-color': closeDialog(); opKid(picker.kidId, { color: hsvToHex(picker.h, picker.s, picker.v) }); break;
     case 'undo': {
       const h = state.history.find(x => x.id === b.dataset.id); if (!h) break;
       const kk = kid(h.kidId);
@@ -696,7 +839,6 @@ document.addEventListener('click', async e => {
 document.addEventListener('change', async e => {
   const t = e.target;
   if (t.dataset.kidName) { t.blur(); opKid(t.dataset.kidName, { name: t.value.trim() || 'Enfant' }); }
-  else if (t.dataset.kidColor) opKid(t.dataset.kidColor, { color: t.value.toLowerCase() });
   else if (t.dataset.iconFile && t.files[0]) {
     try { const value = await resizeImage(t.files[0]); closeDialog(); opKid(t.dataset.iconFile, { icon: { type: 'image', value } }); }
     catch (err) { toast('Cette image n’a pas pu être ouverte. Essaie une autre image.'); }

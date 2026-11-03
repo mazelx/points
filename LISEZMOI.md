@@ -19,7 +19,7 @@
 3. Attends une minute que GitHub publie.
 
 ## D. Relier les deux téléphones
-1. **Ton téléphone** (celui qui a les bons points) : ouvre l'appli avec internet, ferme-la et rouvre-la pour charger la nouvelle version (« Version 1.1.0 » en bas des Réglages).
+1. **Ton téléphone** (celui qui a les bons points) : ouvre l'appli avec internet, ferme-la et rouvre-la pour charger la nouvelle version (numéro de version en bas des Réglages).
    Réglages, « Créer l'espace famille ». Un code de 12 caractères s'affiche.
 2. **Téléphone de la maman** : installe l'appli (étape A.4), Réglages, « J'ai déjà un code famille », saisis le code (bouton « Partager le code » pour l'envoyer par SMS).
 3. C'est fini : un point ajouté sur un téléphone apparaît sur l'autre en une seconde. Sans internet, l'appli continue de marcher et envoie les changements au retour du réseau.

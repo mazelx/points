@@ -36,11 +36,11 @@ Principe directeur : **toujours la solution la plus simple et la plus facile à 
 - Les +1 rapprochés (moins de 2 min, même enfant) sont regroupés en une seule ligne d'historique (pas les lignes du barème).
 - `*{margin:0}` annule le centrage natif des `<dialog>` : garder `margin:auto` sur `dialog`.
 
-## Fonctionnalités en place (v1.2.0)
+## Fonctionnalités en place (v1.3.0)
 Compteur +1 / −1 par enfant, onglet Barème (actions à points positifs ou négatifs, un clic puis choix de l'enfant,
 retrait plafonné au solde), échange de récompenses avec confirmation, barre « encore X pour… », CRUD récompenses et barème,
 historique avec annulation, couleur (26 préréglées + sélecteur TSV maison : carré saturation/luminosité + barre de teinte),
-icône emoji ou image importée de la galerie, ajout/suppression d'enfants, export/import JSON, synchro Firebase avec indicateur d'état.
+icône emoji (liste `ICONS` commune enfants/barème/récompenses, ~210 par catégories) ou image importée de la galerie, ajout/suppression d'enfants, export/import JSON, synchro Firebase avec indicateur d'état.
 
 ## Contraintes
 - Ne pas intégrer d'images ou de dessins de personnages protégés (Pokémon, Peppa Pig, Grizzy et les Lemmings…) :

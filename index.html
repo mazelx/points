@@ -111,7 +111,9 @@ main{max-width:760px;margin:0 auto;padding:18px 16px calc(100px + env(safe-area-
 .hsv-hue i{top:50%}
 .hsv-preview{padding:14px 18px;border-radius:24px}
 .hsv-preview .avatar{width:56px;height:56px;font-size:32px}
-.emoji-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(50px,1fr));gap:6px}
+.emoji-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(46px,1fr));gap:6px}
+.emoji-scroll{max-height:42dvh;overflow:auto;display:grid;gap:8px;padding:3px;margin:-3px;overscroll-behavior:contain}
+.emoji-cat{font-size:14px;font-weight:700;color:var(--muted);margin-top:6px}
 .emoji-opt{aspect-ratio:1;font-size:28px;border-radius:14px;background:var(--surface-2);line-height:1}
 .emoji-opt.sel{outline:3px solid var(--accent);outline-offset:1px}
 .link-danger{color:var(--danger);font-weight:700;justify-self:start;padding:4px 0;font-size:15px}
@@ -166,14 +168,22 @@ dialog::backdrop{background:rgba(20,12,50,.5)}
 
 <script src="firebase-config.js"></script>
 <script>
-const APP_VERSION = '1.2.0';
+const APP_VERSION = '1.3.0';
 const STORE_KEY = 'points-recompenses:v1';
 const SYNC_KEY = 'points-recompenses:famille';
 const FB_URL = 'https://www.gstatic.com/firebasejs/10.12.2';
 
-const KID_ICONS = ['⭐','🦄','🐉','🦖','🐱','🐶','🐻','🐷','🐹','🐭','🐰','🦊','🐼','🐨','🦁','🐯','🐸','🐵','🦉','🐧','🐢','🐙','🦋','🐞','🐬','🦈','🚀','🚗','🚒','🚜','⚽','🏀','🎨','🎸','🌈','⚡','🔥','👑','💎','🏰','🧸','🤖'];
-const REWARD_ICONS = ['🎁','🍦','🍫','🍬','🍭','🍩','🍕','🍔','🍟','🍿','📺','🎮','🎬','📱','🧸','🚲','🏊','🎡','🌳','📚','🎨','⚽','🛁','🌙','⏰','🎟️','🛍️','🎉'];
-const ACTION_ICONS = ['🧹','🛏️','🧺','🍽️','🗑️','🪥','🛁','🚿','👕','🧦','👟','🎒','📚','✏️','🎹','⚽','🥦','🍎','🥛','💤','⏰','🐶','🌱','🧸','🤝','🙏','😊','👍','⭐','😠','🙉','⚠️'];
+// Même liste pour les enfants, le barème et les récompenses (séparées par des espaces : certains emojis font plusieurs caractères)
+const ICONS = [
+  ['Visages', '😀 😊 😁 😂 🥰 😍 😎 🤩 🥳 😇 🤗 🤔 😴 🥱 😢 😭 😠 😡 🤬 😱 🤯 🙄 😜 🤪 🤓 🙈 🙉 🙊 💩 👻 👽 🤖 🎃 💀'],
+  ['Gestes et symboles', '👍 👎 👏 🙌 🤝 🙏 💪 ✌️ 👋 ✋ 🦷 👀 ❤️ 💖 💔 ⭐ 🌟 ✨ ⚡ 🔥 🌈 ☀️ 🌙 ❄️ ☔ ✅ ❌ ⚠️ 🚫 ❓ ❗ 💯'],
+  ['Animaux', '🐶 🐱 🐭 🐹 🐰 🦊 🐻 🐼 🐨 🐯 🦁 🐮 🐷 🐸 🐵 🐔 🐧 🐦 🦉 🦄 🐴 🐝 🐞 🦋 🐌 🐢 🐍 🦖 🐉 🐙 🦈 🐬 🐳 🐟 🦀'],
+  ['Nourriture', '🍎 🍌 🍓 🍉 🍒 🥕 🥦 🌽 🍞 🧀 🥚 🥞 🍕 🍔 🍟 🌭 🍝 🍣 🍿 🍩 🍪 🎂 🧁 🍰 🍫 🍬 🍭 🍦 🥛 🧃'],
+  ['Maison', '🧹 🧺 🧽 🧼 🛏️ 🛁 🚿 🪥 🚽 🗑️ 🍽️ 👕 👖 🧦 👟 🧥 🎒 🪴 🌱 💤 ⏰'],
+  ['École et loisirs', '📚 ✏️ 🖍️ 📝 🎨 🎹 🎸 🥁 🎤 🎧 ⚽ 🏀 🏈 🎾 🏓 🏊 🚴 🛹 ⛸️ 🤸 🧩 🎲 🎮 🕹️ 📺 🎬 📱 💻'],
+  ['Sorties et récompenses', '🎁 🎉 🎈 🎟️ 🎡 🎢 🎠 🏰 ⛺ 🏖️ 🌳 🛝 🚲 🚗 🚀 ✈️ 🚂 🚒 🚜 🚓 🛍️ 💰 🪙 👑 💎 🏆 🥇 🎖️ 🧸 🪀 🪁 🛼']
+].map(([label, s]) => [label, s.split(' ')]);
+const ALL_ICONS = ICONS.flatMap(([, list]) => list);
 const PALETTE = ['#ef476f','#ff6b6b','#e63946','#f3722c','#f8961e','#ffb703','#ffd166','#f9e076','#90be6d','#43aa8b','#06d6a0','#2a9d8f','#4cc9f0','#4895ef','#4361ee','#3a0ca3','#7209b7','#b5179e','#f72585','#ff8fab','#cdb4db','#a2d2ff','#8d99ae','#2b2d42','#6d4c41','#ffffff'];
 
 const uid = () => Math.random().toString(36).slice(2, 9) + Date.now().toString(36);
@@ -438,7 +448,7 @@ function opKid(id, patch) {
 function opAddKid() {
   if (!ready()) return;
   const n = state.kids.length;
-  const k = { id: uid(), name: `Enfant ${n + 1}`, points: 0, color: PALETTE[(n * 5) % PALETTE.length], icon: { type: 'emoji', value: KID_ICONS[n % KID_ICONS.length] } };
+  const k = { id: uid(), name: `Enfant ${n + 1}`, points: 0, color: PALETTE[(n * 5) % PALETTE.length], icon: { type: 'emoji', value: ['⭐', '🦄', '🦖', '🐱', '🚀', '🦊'][n % 6] } };
   if (!isRemote()) { state.kids.push(k); save(); render(); return; }
   fb.updateDoc(famRef, kidPath(k.id), { name: k.name, points: 0, color: k.color, icon: k.icon, order: Date.now() }).catch(syncError);
 }
@@ -613,10 +623,15 @@ function openShop(kidId) {
     <div class="dlg-actions"><button class="btn" data-action="close">Fermer</button></div>`);
 }
 
-function emojiField(choices, current) {
+// attrs : data-action (et data-kid) posés sur chaque bouton ; current absent de la liste = icône d'une ancienne version
+function emojiGrid(current, attrs) {
+  const opt = e => `<button class="emoji-opt ${e === current ? 'sel' : ''}" ${attrs} data-emoji="${esc(e)}">${esc(e)}</button>`;
+  const extra = current && !ALL_ICONS.includes(current) ? `<div class="emoji-grid">${opt(current)}</div>` : '';
+  return `<div class="emoji-scroll">${extra}${ICONS.map(([label, list]) => `<h3 class="emoji-cat">${label}</h3><div class="emoji-grid">${list.map(opt).join('')}</div>`).join('')}</div>`;
+}
+function emojiField(current) {
   editingEmoji = current;
-  const icons = choices.includes(current) ? choices : [current, ...choices];
-  return `<div class="field"><span>Icône</span><div class="emoji-grid">${icons.map(e => `<button class="emoji-opt ${e === current ? 'sel' : ''}" data-action="pick-remoji" data-emoji="${esc(e)}">${esc(e)}</button>`).join('')}</div></div>`;
+  return `<div class="field"><span>Icône</span>${emojiGrid(current, 'data-action="pick-remoji"')}</div>`;
 }
 
 function openRewardEditor(id) {
@@ -624,7 +639,7 @@ function openRewardEditor(id) {
   openDialog(`<h2>${id ? 'Modifier la récompense' : 'Nouvelle récompense'}</h2>
     <label class="field"><span>Nom</span><input id="r-name" value="${esc(r.name)}" maxlength="40" placeholder="Ex. : une glace" autocomplete="off"></label>
     <label class="field"><span>Prix en points</span><input id="r-price" type="number" inputmode="numeric" min="1" max="9999" value="${r.price}"></label>
-    ${emojiField(REWARD_ICONS, r.emoji)}
+    ${emojiField(r.emoji)}
     <div class="dlg-actions"><button class="btn" data-action="close">Annuler</button>
     <button class="btn btn-primary" data-action="save-reward" data-id="${id || ''}">Enregistrer</button></div>`);
 }
@@ -634,7 +649,7 @@ function openActionEditor(id) {
   openDialog(`<h2>${id ? 'Modifier l’action' : 'Nouvelle action'}</h2>
     <label class="field"><span>Action</span><input id="a-name" value="${esc(a.name)}" maxlength="40" placeholder="Ex. : ranger sa chambre" autocomplete="off"></label>
     <label class="field"><span>Points (négatif pour en retirer, ex. −2)</span><input id="a-points" type="number" inputmode="numeric" min="-999" max="999" value="${a.points}"></label>
-    ${emojiField(ACTION_ICONS, a.emoji)}
+    ${emojiField(a.emoji)}
     <div class="dlg-actions"><button class="btn" data-action="close">Annuler</button>
     <button class="btn btn-primary" data-action="save-action" data-id="${id || ''}">Enregistrer</button></div>`);
 }
@@ -688,7 +703,7 @@ function openIconPicker(kidId) {
   openDialog(`<h2>Icône de ${esc(k.name)}</h2>
     <label class="btn btn-primary btn-block">📷 Choisir une image du téléphone<input type="file" accept="image/*" data-icon-file="${k.id}" hidden></label>
     <p class="muted small">Une photo ou une image enregistrée dans ta galerie. Elle sera réduite avant d’être enregistrée.</p>
-    <div class="emoji-grid">${KID_ICONS.map(e => `<button class="emoji-opt ${k.icon.type === 'emoji' && k.icon.value === e ? 'sel' : ''}" data-action="set-emoji" data-kid="${k.id}" data-emoji="${e}">${e}</button>`).join('')}</div>
+    ${emojiGrid(k.icon.type === 'emoji' ? k.icon.value : null, `data-action="set-emoji" data-kid="${k.id}"`)}
     <div class="dlg-actions"><button class="btn" data-action="close">Fermer</button></div>`);
 }
 
